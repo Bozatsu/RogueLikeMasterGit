@@ -1,0 +1,70 @@
+body{
+    background-image: url(../IMG/dungeon.jpg);
+    background-size:cover;
+    font-family: 'MedievalSharp', cursive;
+    color:gold;
+}
+header{
+    text-align: center;
+    margin: auto;
+    font-size: 3em;
+    border: 1px solid rgb(56, 54, 54);
+    padding: .2em;
+}
+footer{
+    text-align: center;
+    margin: auto;
+    border: 1px solid rgb(56, 54, 54);
+    padding: .2em;
+}
+main{
+    display: flex;
+}
+h1{
+    margin-left: 30px;
+}
+table{
+    margin:1em;
+    box-shadow: 10px 10px gray;
+}
+td{
+    width:25px;
+    height: 25px;
+    border: 1px solid black;
+    box-shadow: .2px inset;
+}
+#Boutons{
+    display: flex;
+    flex-direction: column;
+}
+span{
+    width: 100%;
+    margin: auto;
+    text-align: center;
+}
+input{
+    width: 50px;
+    height: 50px;
+}
+#up{
+    background-image: url(../IMG/ArrowUp.PNG);
+    background-size: 350%;
+    background-position: center;
+    margin: auto;
+}
+#right{
+    background-image: url(../IMG/ArrowRight.PNG);
+    background-size: 180%;
+    background-position: center;
+}
+#left{
+    background-image: url(../IMG/ArrowLeft.PNG);
+    background-size: 180%;
+    background-position: center;
+}
+#down{
+    background-image: url(../IMG/ArrowDown.PNG);
+    background-size: 350%;
+    background-position: center;
+    margin: auto;
+}
