@@ -18,109 +18,54 @@ let dungeon = [["A1","A2","A3","A4","A5","A6","A7","A8","A9","A10","A11","A12","
 ["R1","R2","R3","R4","R5","R6","R7","R8","R9","R10","R11","R12","R13","R14","R15","R16","R17","R18","R19","R20","R21","R22","R23","R24","R25","R26","R27","R28","R29","R30"],
 ["S1","S2","S3","S4","S5","S6","S7","S8","S9","S10","S11","S12","S13","S14","S15","S16","S17","S18","S19","S20","S21","S22","S23","S24","S25","S26","S27","S28","S29","S30"],
 ["T1","T2","T3","T4","T5","T6","T7","T8","T9","T10","T11","T12","T13","T14","T15","T16","T17","T18","T19","T20","T21","T22","T23","T24","T25","T26","T27","T28","T29","T30"]];
-/*
-let row =new Array(31);
-row[0] = "";
-for (let i = 0; i < 20; i++){
-    for(let j = 0; j < 30; j++){
-        row[i] = row[i] + " | " + dungeon[i][j];
-    }
-    console.log(row[i]);
-    row[i+1] = "";
-    console.log("\n");
-}
-*/
+
 for (let i = 0; i < 20; i++){
     for(let j = 0; j < 30; j++){
         dungeon[i][j] = document.getElementById(dungeon[i][j]);
+        dungeon[i][j].style.backgroundColor = 'red';
     }
 }
-
+let nombreCellules;
+let emplacementCentre;
+let jalon;
 /*
-//Mur Exterieur
-for (let i = 0; i < 20; i++){
-    if (i == 0 || i == 19){
-        for (let j = 0; j < 30; j++){
-            dungeon[i][j].style.backgroundColor = 'red';
-            dungeon[i][j].style.backgroundColor = 'red';      
+for (let i=1; i<19; i++){
+    nombreCellules = Math.ceil(Math.random()*26); //Determination du nombre de cellules sol par ligne
+    for (let j = 0; j<29; j++){
+        if (i==1){
+            
+            emplacementCentre = Math.ceil(Math.random()*26/2); //Determination du centre des cellules sol
+            if(j>=(28-nombreCellules)/2 && j<=28-(28-nombreCellules)/2){
+                dungeon[i][j].style.backgroundColor = "cyan";
+            }
+            jalon = (28-nombreCellules)/2;
         }
-    }
-    else{
-        for (let j = 0; j < 30; j++){
-            if (j == 0 || j == 29){
-                dungeon[i][j].style.backgroundColor = 'red';
-                dungeon[i][j].style.backgroundColor = 'red'; 
-            }     
-        }
+        else{
+            //nombreCellules = Math.ceil(Math.random()*26); //Determination du nombre de cellules sol par ligne
+            if (i%2==0){
+                if (j >= jalon && j < jalon + nombreCellules){
+                    dungeon[i][j].style.backgroundColor = "cyan";
+                    jalon = (28-nombreCellules)/2;
+                }
+            }
+            else{
+                if (j >= jalon && j < jalon + nombreCellules){
+                    dungeon[i][j].style.backgroundColor = "cyan";
+                    jalon = (28-nombreCellules)/2 + 2;
+                }
+            }  
+        } 
     }
 }
 */
 
-//Generation du sol
-let pieceMonnaieCeil;
-//let pieceMonnaieSol = 0;
-for (let i = 0; i < 20; i++){
-    for (let j = 0; j < 30; j++){
-
-        pieceMonnaieCeil = Math.random();
-
-        if (pieceMonnaieCeil < 0.5){
-            dungeon[i][j].style.backgroundColor = 'red';
-        }
-        else{
-            dungeon[i][j].style.backgroundColor = 'cyan';
-        }
-
-        
-
-        if (i==0 || i==19 || j==0 || j==29){
-            dungeon[i][j].style.backgroundColor = 'red';
-        }
-    }     
-}
-//Portes
-dungeon[19][2].style.backgroundColor = 'blue';
-dungeon[3][29].style.backgroundColor = 'blue';
-
-//sols a partir des portes
-dungeon[3][28].style.backgroundColor = 'cyan';
-dungeon[18][2].style.backgroundColor = 'cyan';
-for (let i=3; i<18;i++){
-    pieceMonnaieCeil = Math.random();
-    for (let j=2; j<29;j++){
-        if (pieceMonnaieCeil<.5){
-            dungeon[i+1][j].style.backgroundColor = 'cyan';
-        }
-        else{
-            dungeon[i][j-1].style.backgroundColor = 'cyan';
-        }
-    }     
-}
-//Enlever l'excedent de sol
-for (let i=3; i<17;i++){
-    for (let j=2; j<25;j++){
-        if (dungeon[i][j].style.backgroundColor =='cyan' && dungeon[i][j+1].style.backgroundColor =='cyan'  && dungeon[i][j+2].style.backgroundColor =='cyan'  && dungeon[i][j+3].style.backgroundColor =='cyan'  ){
-            pieceMonnaieCeil = Math.random();
-            if (pieceMonnaieCeil<.5){
-                dungeon[i][j+2].style.backgroundColor = 'red';
-            }            
-        }
+for (let i=1; i<19; i++){
+    nombreCellules = Math.ceil(Math.random()*26); //Determination du nombre de cellules sol par ligne
+    console.log(nombreCellules);
+    console.log((28-nombreCellules)/2 + " " + (28-((28-nombreCellules)/2)))
+    for (let j =Math.ceil(((28-nombreCellules)/2)); j<=Math.ceil((28-((28-nombreCellules)/2))); j++){
+        dungeon[i][j].style.backgroundColor = "cyan";
+        console.log('Hello');
     }
 }
-let colonne =2;
-for (let i=3; i<17;i++){
-    for (let j=2; j<colonne;j++){
-        if (dungeon[i][j].style.backgroundColor =='cyan' && dungeon[i+1][j].style.backgroundColor =='cyan'){
-            if (j+1<29){
-                colonne = j;
-                break; 
-            }
-            else{
-                break;
-            }                       
-        }
-    }
-}
-
-
 
