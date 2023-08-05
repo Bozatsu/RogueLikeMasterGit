@@ -30,7 +30,7 @@ table{
 td{
     width:25px;
     height: 25px;
-    border: 1px solid black;
+    border: 1px solid pink;
     box-shadow: .2px inset;
 }
 #Boutons{
@@ -67,4 +67,14 @@ input{
     background-size: 350%;
     background-position: center;
     margin: auto;
+}
+#init{
+    background-position: center;
+    margin: auto;
+    width: max-content;
+}
+#test{
+    background-position: center;
+    margin: auto;
+    width: max-content;
 }

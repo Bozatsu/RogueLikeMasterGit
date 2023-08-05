@@ -1,3 +1,9 @@
+//Fonction main
+let state = true;
+// do{
+
+// }while(state);
+//Generation de la grille (On peut ameliorer cette partie avec une fonction)
 let dungeon = [["A1","A2","A3","A4","A5","A6","A7","A8","A9","A10","A11","A12","A13","A14","A15","A16","A17","A18","A19","A20","A21","A22","A23","A24","A25","A26","A27","A28","A29","A30"],
 ["B1","B2","B3","B4","B5","B6","B7","B8","B9","B10","B11","B12","B13","B14","B15","B16","B17","B18","B19","B20","B21","B22","B23","B24","B25","B26","B27","B28","B29","B30"],
 ["C1","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12","C13","C14","C15","C16","C17","C18","C19","C20","C21","C22","C23","C24","C25","C26","C27","C28","C29","C30"],
@@ -22,50 +28,275 @@ let dungeon = [["A1","A2","A3","A4","A5","A6","A7","A8","A9","A10","A11","A12","
 for (let i = 0; i < 20; i++){
     for(let j = 0; j < 30; j++){
         dungeon[i][j] = document.getElementById(dungeon[i][j]);
-        dungeon[i][j].style.backgroundColor = 'red';
+        //dungeon[i][j].style.backgroundColor = 'red';
     }
 }
+
+//Generation aleatoire du sol;
 let nombreCellules;
-let emplacementCentre;
-let jalon;
-/*
-for (let i=1; i<19; i++){
-    nombreCellules = Math.ceil(Math.random()*26); //Determination du nombre de cellules sol par ligne
-    for (let j = 0; j<29; j++){
-        if (i==1){
-            
-            emplacementCentre = Math.ceil(Math.random()*26/2); //Determination du centre des cellules sol
-            if(j>=(28-nombreCellules)/2 && j<=28-(28-nombreCellules)/2){
-                dungeon[i][j].style.backgroundColor = "cyan";
-            }
-            jalon = (28-nombreCellules)/2;
-        }
-        else{
-            //nombreCellules = Math.ceil(Math.random()*26); //Determination du nombre de cellules sol par ligne
-            if (i%2==0){
-                if (j >= jalon && j < jalon + nombreCellules){
-                    dungeon[i][j].style.backgroundColor = "cyan";
-                    jalon = (28-nombreCellules)/2;
-                }
-            }
-            else{
-                if (j >= jalon && j < jalon + nombreCellules){
-                    dungeon[i][j].style.backgroundColor = "cyan";
-                    jalon = (28-nombreCellules)/2 + 2;
-                }
-            }  
-        } 
-    }
-}
-*/
+let ligne = [0]; //Tableau des lignes
+let debutSol = [0]; //Tableau des indices de debut du sol (repere par l'index de la ligne)
+let finSol = [0]; //Tableau des indices de fin de sol (repere par l'index de la ligne)
+let nbreCellules = [0]; //Tableau des nombres de cellules sol par ligne (repere par l'index de la ligne)
 
 for (let i=1; i<19; i++){
     nombreCellules = Math.ceil(Math.random()*26); //Determination du nombre de cellules sol par ligne
     console.log(nombreCellules);
-    console.log((28-nombreCellules)/2 + " " + (28-((28-nombreCellules)/2)))
-    for (let j =Math.ceil(((28-nombreCellules)/2)); j<=Math.ceil((28-((28-nombreCellules)/2))); j++){
+    let debutJ = Math.ceil((28-nombreCellules)/2);
+    let finJ = Math.ceil((28-nombreCellules)/2)+Math.ceil(28-(28-nombreCellules)/2);
+    console.log("Debut et Fin de J : " + debutJ + " " + finJ);
+    for (let j =Math.ceil((28-nombreCellules)/2); j<=Math.ceil(28-(28-nombreCellules)/2); j++){
         dungeon[i][j].style.backgroundColor = "cyan";
-        console.log('Hello');
+        console.log(i + " " + j); 
+    }
+    //Actualisation des tableaux
+    ligne.push(i);
+    debutSol.push(debutJ);
+    finSol.push(finJ);
+    nbreCellules.push(nombreCellules);
+}
+
+//Tests
+// for (let i in ligne){
+//     console.log("Ligne : " + ligne[i] + ", DebutSol : " + debutSol[i] + ", FinSol : " + finSol[i] + ", NombreCellules : " + nbreCellules[i]);
+// }
+
+//Initialisation du Joueur/Warrior
+//warrior.style.backgroundImage = "url('./img/WarriorGirl.png')";
+let warrior = dungeon[18][14]; //Le joueur apparaitra toujours a cette position au depart
+//Parametres qui permettent de suivre le joueur
+let warriorI = 18; 
+let warriorJ = 14;
+warrior.style.backgroundColor = 'green';
+
+//Creation aleatoire des monstres
+let monstreI, monstreJ;
+function monstres(){
+    let hasardLigne
+    do{
+        hasardLigne = Math.ceil(Math.random()*18);
+    } while (hasardLigne<1 || hasardLigne>18)
+    console.log(hasardLigne);
+    let hasardColonne = Math.ceil(Math.random()*nbreCellules[hasardLigne]);
+    console.log(hasardColonne);
+    console.log(debutSol[hasardLigne]+hasardColonne);
+    let monstre = dungeon[hasardLigne][debutSol[hasardLigne]+hasardColonne];
+    console.log(hasardLigne + " " + (debutSol[hasardLigne]+hasardColonne));
+    monstreI = hasardLigne;
+    monstreJ = debutSol[hasardLigne]+hasardColonne;
+    return monstre;
+}
+let monstre1 = monstres();
+let monstre1I = monstreI; //Tracking de la position du monstre 1 en horizontal : i
+let monstre1J = monstreJ; //Tracking de la position du monstre 1 a la verticale : j
+let monstre2 = monstres();
+let monstre2I = monstreI;
+let monstre2J = monstreJ;
+
+monstre1.style.backgroundColor = 'purple';
+monstre2.style.backgroundColor = 'purple';
+
+//Mouvement du Joueur/Warrior
+//let compteur = 0; nombre de movements pour etablir des records
+function up(){
+    if(warriorJ>=debutSol[warriorI-1] && warriorJ<=finSol[warriorI-1] && (warriorI-1)>=0){
+        warrior = dungeon[warriorI-1][warriorJ];
+        warrior.style.backgroundColor = 'green';
+        dungeon[warriorI][warriorJ].style.backgroundColor = 'cyan';
+        warriorI -= 1;
+        MoveMonstre();
+        MoveMonstre2();
+        //Collision avec un monstre
+        if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
+            geler();
+            prompt("Game Over");
+            return;
+        }
+    }
+    else{ //Pas de mouvement
+        return;
+    } 
+}
+function down(){
+    if(warriorJ>=debutSol[warriorI+1] && warriorJ<=finSol[warriorI+1] && warriorI+1<=20){
+        warrior = dungeon[warriorI+1][warriorJ];
+        warrior.style.backgroundColor = 'green';
+        dungeon[warriorI][warriorJ].style.backgroundColor = 'cyan';
+        warriorI += 1;
+        MoveMonstre();
+        MoveMonstre2();
+        if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
+            geler();
+            prompt("Game Over");
+            return;
+        }
+    }
+    else{
+        return;
+    } 
+}
+function right(){
+    if(warriorJ+1>=debutSol[warriorI] && warriorJ+1<=finSol[warriorI] && warriorJ+1<=30){
+        warrior = dungeon[warriorI][warriorJ+1];
+        warrior.style.backgroundColor = 'green';
+        dungeon[warriorI][warriorJ].style.backgroundColor = 'cyan';
+        warriorJ += 1;
+        MoveMonstre();
+        MoveMonstre2();
+        if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
+            geler();
+            prompt("Game Over");
+            return;
+        }
+    }
+    else{
+        return;
+    } 
+}
+function left(){
+    if(warriorJ-1>=debutSol[warriorI] && warriorJ-1<=finSol[warriorI] && warriorJ-1>=0){
+        warrior = dungeon[warriorI][warriorJ-1];
+        warrior.style.backgroundColor = 'green';
+        dungeon[warriorI][warriorJ].style.backgroundColor = 'cyan';
+        warriorJ -= 1;
+        MoveMonstre();
+        MoveMonstre2();
+        if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
+            // ************************************************************************
+            geler();
+            prompt("Game Over");
+            return;
+        }
+    }
+    else{
+        return;
+    } 
+}
+let boutonHaut = document.getElementById('up');
+boutonHaut.addEventListener("click", function(){up();});
+
+let boutonBas = document.getElementById('down');
+boutonBas.addEventListener("click", function(){down();});
+
+let boutonDroit = document.getElementById('right');
+boutonDroit.addEventListener("click", function(){right();});
+
+let boutonGauche = document.getElementById('left');
+boutonGauche.addEventListener("click", function(){left();});
+
+
+
+
+//Generation des movements des monstres
+function MoveMonstre(){
+    let moveRandom;
+    moveRandom = Math.random();
+    if(moveRandom<.25){
+        //Vers le haut
+        if(monstre1J>=debutSol[monstre1I-1] && monstre1J<=finSol[monstre1I-1] && monstre1I-1>=0){
+            monstre1 = dungeon[monstre1I-1][monstre1J];
+            monstre1.style.backgroundColor = 'purple';
+            dungeon[monstre1I][monstre1J].style.backgroundColor = 'cyan';
+            monstre1I -= 1;
+        }
+        else{
+            return;
+        }
+    }
+    else if(moveRandom<.5){
+        //Vers le bas
+        if(monstre1J>=debutSol[monstre1I+1] && monstre1J<=finSol[monstre1I+1] && monstre1I+1<=20){
+            monstre1 = dungeon[monstre1I+1][monstre1J];
+            monstre1.style.backgroundColor = 'purple';
+            dungeon[monstre1I][monstre1J].style.backgroundColor = 'cyan';
+            monstre1I += 1;
+        }
+        else{
+            return;
+        } 
+    }
+    else if(moveRandom<.75){
+        //Vers la droite
+        if(monstre1J+1>=debutSol[monstre1I] && monstre1J+1<=finSol[monstre1I] && monstre1J+1<=30){
+            monstre1 = dungeon[monstre1I][monstre1J+1];
+            monstre1.style.backgroundColor = 'purple';
+            dungeon[monstre1I][monstre1J].style.backgroundColor = 'cyan';
+            monstre1J += 1;
+        }
+        else{
+            return;
+        } 
+    }
+    else{
+        //Vers la gauche
+        if(monstre1J-1>=debutSol[monstre1I] && monstre1J-1<=finSol[monstre1I] && monstre1J-1>=0){
+            monstre1 = dungeon[monstre1I][monstre1J-1];
+            monstre1.style.backgroundColor = 'purple';
+            dungeon[monstre1I][monstre1J].style.backgroundColor = 'cyan';
+            monstre1J -= 1;
+        }
+        else{
+            return;
+        } 
     }
 }
 
+function MoveMonstre2(){
+    let moveRandom;
+    moveRandom = Math.random();
+    if(moveRandom<.25){
+        //Vers le haut
+        if(monstre2J>=debutSol[monstre2I-1] && monstre2J<=finSol[monstre2I-1] && monstre2I-1>=0){
+            monstre2 = dungeon[monstre2I-1][monstre2J];
+            monstre2.style.backgroundColor = 'purple';
+            dungeon[monstre2I][monstre2J].style.backgroundColor = 'cyan';
+            monstre2I -= 1;
+        }
+        else{
+            return;
+        }
+    }
+    else if(moveRandom<.5){
+        //Vers le bas
+        if(monstre2J>=debutSol[monstre2I+1] && monstre2J<=finSol[monstre2I+1] && monstre2I+1<=20){
+            monstre2 = dungeon[monstre2I+1][monstre2J];
+            monstre2.style.backgroundColor = 'purple';
+            dungeon[monstre2I][monstre2J].style.backgroundColor = 'cyan';
+            monstre2I += 1;
+        }
+        else{
+            return;
+        } 
+    }
+    else if(moveRandom<.75){
+        //Vers la droite
+        if(monstre2J+1>=debutSol[monstre2I] && monstre2J+1<=finSol[monstre2I] && monstre2J+1<=30){
+            monstre2 = dungeon[monstre2I][monstre2J+1];
+            monstre2.style.backgroundColor = 'purple';
+            dungeon[monstre2I][monstre2J].style.backgroundColor = 'cyan';
+            monstre2J += 1;
+        }
+        else{
+            return;
+        } 
+    }
+    else{
+        //Vers la gauche
+        if(monstre2J-1>=debutSol[monstre2I] && monstre2J-1<=finSol[monstre2I] && monstre2J-1>=0){
+            monstre2 = dungeon[monstre2I][monstre2J-1];
+            monstre2.style.backgroundColor = 'purple';
+            dungeon[monstre2I][monstre2J].style.backgroundColor = 'cyan';
+            monstre2J -= 1;
+        }
+        else{
+            return;
+        } 
+    }
+}
+
+function geler(){
+    boutonHaut.removeEventListener("click", function(){up();});
+    boutonBas.removeEventListener("click", function(){down();});
+    boutonDroit.removeEventListener("click", function(){right();});
+    boutonGauche.removeEventListener("click", function(){left();});
+}
