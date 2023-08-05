@@ -64,14 +64,13 @@ nbreCellules.push(0);
 // for (let i in ligne){
 //     console.log("Ligne : " + ligne[i] + ", DebutSol : " + debutSol[i] + ", FinSol : " + finSol[i] + ", NombreCellules : " + nbreCellules[i]);
 // }
+for (let i=0; i<=19; i++){
+    console.log("Pour la ligne " + i + "  : " + ligne[i]);
+    console.log("Nombre de cellules : " + nbreCellules[i]);
+    console.log("Indice de debut J : " + debutSol[i]);
+    console.log("Indice de fin J : " + finSol[i]);
 
-// for (let i=0; i<=19; i++){
-//     console.log("Pour la ligne " + i + "  : " + ligne[i]);
-//     console.log("Nombre de cellules : " + nbreCellules[i]);
-//     console.log("Indice de debut J : " + debutSol[i]);
-//     console.log("Indice de fin J : " + finSol[i]);
-
-// }
+}
 
 //Initialisation du Joueur/Warrior
 //warrior.style.backgroundImage = "url('./img/WarriorGirl.png')";
@@ -83,7 +82,7 @@ warrior.style.backgroundColor = 'green';
 
 //Creation aleatoire des monstres
 let elementI, elementJ; //elementI et elementJ sont les indices de position des monstres et tresors (elements)
-function monstresTresors(){
+function monstres(){
     let hasardLigne
     do{
         hasardLigne = Math.ceil(Math.random()*18);
@@ -100,17 +99,17 @@ function monstresTresors(){
 }
 //Creation des monstres
 //Monstre 1
-let monstre1, monstre1I, monstre1J;
+let monstre1I, monstre1J;
 do{
-    monstre1 = monstresTresors();
+    let monstre1 = monstres();
     monstre1I = elementI; //Tracking de la position du monstre 1 en horizontal : i
     monstre1J = elementJ; //Tracking de la position du monstre 1 a la verticale : j
-}while(monstre1I == 18 && monstre1J == 14); //Verification que la position du monstre 1 != position initiale du joueur
+}while(monstre2I == 18 && monstre2J == 14); //Verification que la position du monstre 1 != position initiale du joueur
 
 //Monstre 2
-let monstre2, monstre2I, monstre2J;
+let monstre2I, monstre2J;
 do{
-    monstre2 = monstresTresors();
+    let monstre2 = monstres();
     monstre2I = elementI;
     monstre2J = elementJ;
 }while((monstre2I == 18 && monstre2J == 14) || (monstre2I == monstre1I && monstre2J == monstre1J)); //Verification que monstre 2 != monstre 1 ou du joueur
@@ -121,16 +120,16 @@ monstre2.style.backgroundColor = 'purple';
 
 //Creation des tresors
 //Tresor 1
-let tresor1, tresor1I, tresor1J;
+let tresor1I, tresor1J;
 do{
-    tresor1 = monstresTresors();
+    let tresor1 = monstres();
     tresor1I = elementI;
     tresor1J = elementJ;
 }while((tresor1I == 18 && tresor1J == 14)||(tresor1I == monstre1I && tresor1J == monstre1J) || (tresor1I == monstre2I && tresor1J == monstre2J)) //Verification que la position du tresor 1 != position des monstres 1 et 2 ou du joueur
 //Tresor 2
-let tresor2, tresor2I, tresor2J;
+let tresor2I, tresor2J;
 do{
-    tresor2 = monstresTresors();
+    let tresor2 = monstres();
     tresor2I = elementI;
     tresor2J = elementJ;
 }while((tresor2I == 18 && tresor2J == 14)||(tresor2I == monstre1I && tresor2J == monstre1J) || (tresor2I == monstre2I && tresor2J == monstre2J) || (tresor2I == tresor1I && tresor2J == tresor1J))//Verification que la position du tresor 2 != position des monstres 1 et 2 ou du tresor 1 ou du joueur
@@ -140,15 +139,7 @@ tresor2.style.backgroundColor = 'gold';
 
 //Mouvement du Joueur/Warrior
 //let compteur = 0; nombre de movements pour etablir des records
-let scorespan = document.getElementById('score');
-let nbreTresorsRestants = document.getElementById('nbreTresors');
-scorespan = 0;
-nbreTresorsRestants = 2;
-score.textContent = scorespan.toString(); //Ca marche avec les ID
-nbreTresors.textContent = nbreTresorsRestants.toString();
-
 function up(){
-    //Verification de la cellule de destination
     if(warriorJ>=debutSol[warriorI-1] && warriorJ<=finSol[warriorI-1] && (warriorI-1)>=0){
         warrior = dungeon[warriorI-1][warriorJ];
         warrior.style.backgroundColor = 'green';
@@ -156,33 +147,16 @@ function up(){
         warriorI -= 1;
         MoveMonstre();
         MoveMonstre2();
-
         //Collision avec un monstre
         if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
-            geler;
+            geler();
             prompt("Game Over");
             return;
         }
-        //Recuperation du premier tresor
-        else if(warriorI == tresor1I && warriorJ == tresor1J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor1I = 0;
-            tresor1J = 0;
-        }
-        //Recuperation du deuxieme tresor
-        else if(warriorI == tresor2I && warriorJ == tresor2J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor2I = 0;
-            tresor2J = 0;
-        }
-        //Collision dans un mur
-        else{
+    }
+    else{ //Pas de mouvement
         return;
-        }
-    }   
-    win(); 
+    } 
 }
 function down(){
     if(warriorJ>=debutSol[warriorI+1] && warriorJ<=finSol[warriorI+1] && warriorI+1<=19){
@@ -192,32 +166,15 @@ function down(){
         warriorI += 1;
         MoveMonstre();
         MoveMonstre2();
-        //Collision avec un monstre
         if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
-            geler;
+            geler();
             prompt("Game Over");
             return;
         }
-        //Recuperation du premier tresor
-        else if(warriorI == tresor1I && warriorJ == tresor1J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor1I = 0;
-            tresor1J = 0;
-        }
-        //Recuperation du deuxieme tresor
-        else if(warriorI == tresor2I && warriorJ == tresor2J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor2I = 0;
-            tresor2J = 0;
-        }
-        //Collision dans un mur
-        else{
+    }
+    else{
         return;
-        }
-    }    
-    win(); 
+    } 
 }
 function right(){
     if(warriorJ+1>=debutSol[warriorI] && warriorJ+1<=finSol[warriorI] && warriorJ+1<=29){
@@ -227,32 +184,15 @@ function right(){
         warriorJ += 1;
         MoveMonstre();
         MoveMonstre2();
-        //Collision avec un monstre
         if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
-            geler;
+            geler();
             prompt("Game Over");
             return;
         }
-        //Recuperation du premier tresor
-        else if(warriorI == tresor1I && warriorJ == tresor1J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor1I = 0;
-            tresor1J = 0;
-        }
-        //Recuperation du deuxieme tresor
-        else if(warriorI == tresor2I && warriorJ == tresor2J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor2I = 0;
-            tresor2J = 0;
-        }
-        //Collision dans un mur
-        else{
+    }
+    else{
         return;
-        }
-    }   
-    win(); 
+    } 
 }
 function left(){
     if(warriorJ-1>=debutSol[warriorI] && warriorJ-1<=finSol[warriorI] && warriorJ-1>=0){
@@ -262,32 +202,16 @@ function left(){
         warriorJ -= 1;
         MoveMonstre();
         MoveMonstre2();
-        //Collision avec un monstre
         if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
-            geler;
+            // ************************************************************************
+            geler();
             prompt("Game Over");
             return;
         }
-        //Recuperation du premier tresor
-        else if(warriorI == tresor1I && warriorJ == tresor1J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor1I = 0;
-            tresor1J = 0;
-        }
-        //Recuperation du deuxieme tresor
-        else if(warriorI == tresor2I && warriorJ == tresor2J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor2I = 0;
-            tresor2J = 0;
-        }
-        //Collision dans un mur
-        else{
+    }
+    else{
         return;
-        }
-    }   
-    win(); 
+    } 
 }
 let boutonHaut = document.getElementById('up');
 boutonHaut.addEventListener("click", function(){up();});
@@ -300,13 +224,6 @@ boutonDroit.addEventListener("click", function(){right();});
 
 let boutonGauche = document.getElementById('left');
 boutonGauche.addEventListener("click", function(){left();});
-
-function win(){
-    if (scorespan == 2){
-        geler;
-        window.alert ("You Won!");
-    }
-}
 
 
 

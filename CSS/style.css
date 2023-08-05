@@ -21,7 +21,8 @@ main{
     display: flex;
 }
 h1{
-    margin-left: 30px;
+    margin: 20px;
+
 }
 table{
     margin:1em;
@@ -36,6 +37,7 @@ td{
 #Boutons{
     display: flex;
     flex-direction: column;
+    margin: 50px;
 }
 span{
     width: 100%;
