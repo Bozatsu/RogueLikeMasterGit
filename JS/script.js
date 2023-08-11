@@ -1,8 +1,4 @@
-//Fonction main
-let state = true;
-// do{
 
-// }while(state);
 //Generation de la grille (On peut ameliorer cette partie avec une fonction)
 let dungeon = [["A1","A2","A3","A4","A5","A6","A7","A8","A9","A10","A11","A12","A13","A14","A15","A16","A17","A18","A19","A20","A21","A22","A23","A24","A25","A26","A27","A28","A29","A30"],
 ["B1","B2","B3","B4","B5","B6","B7","B8","B9","B10","B11","B12","B13","B14","B15","B16","B17","B18","B19","B20","B21","B22","B23","B24","B25","B26","B27","B28","B29","B30"],
@@ -28,399 +24,501 @@ let dungeon = [["A1","A2","A3","A4","A5","A6","A7","A8","A9","A10","A11","A12","
 for (let i = 0; i < 20; i++){ //20 lignes
     for(let j = 0; j < 30; j++){ //30 colonnes
         dungeon[i][j] = document.getElementById(dungeon[i][j]);
-        //dungeon[i][j].style.backgroundColor = 'red';
+        dungeon[i][j].style.backgroundColor = 'red'; //Mur
+        dungeon[i][j].style.backgroundImage = "url('./img/brick.jpg')";
+        dungeon[i][j].style.backgroundSize = "cover";
     }
 }
+//Jeu
+main();
 
-//Generation aleatoire du sol;
-let nombreCellules = 0;
-let ligne = [0]; //Tableau des lignes
-let debutSol = [0]; //Tableau des indices de debut du sol (repere par l'index de la ligne)
-let finSol = [0]; //Tableau des indices de fin de sol (repere par l'index de la ligne)
-let nbreCellules = [0]; //Tableau des nombres de cellules sol par ligne (repere par l'index de la ligne)
+//Fonctionnalite Reinitialisation
+let reininitialisation = document.getElementById('init');
+reininitialisation.addEventListener('click', reinitialisationJeu);
 
-for (let i=1; i<19; i++){
-    nombreCellules = Math.ceil(Math.random()*26); //Determination du nombre de cellules sol par ligne
-    //console.log(nombreCellules);
-    let debutJ = Math.ceil((28-nombreCellules)/2);
-    let finJ = 29 - debutJ;
-    //console.log("Debut et Fin de J : " + debutJ + " " + finJ);
-    for (let j = debutJ; j<=finJ; j++){
-        dungeon[i][j].style.backgroundColor = "cyan";
-        //console.log(i + " " + j); 
-    }
-    //Actualisation des tableaux des indices
-    ligne.push(i); 
-    debutSol.push(debutJ); 
-    finSol.push(finJ); 
-    nbreCellules.push(nombreCellules); 
+function reinitialisationJeu(){
+    window.location.reload(true);
 }
-ligne.push(19); 
-debutSol.push(0); 
-finSol.push(0); 
-nbreCellules.push(0); 
 
-//Tests
-// for (let i in ligne){
-//     console.log("Ligne : " + ligne[i] + ", DebutSol : " + debutSol[i] + ", FinSol : " + finSol[i] + ", NombreCellules : " + nbreCellules[i]);
-// }
+function main(){
 
-// for (let i=0; i<=19; i++){
-//     console.log("Pour la ligne " + i + "  : " + ligne[i]);
-//     console.log("Nombre de cellules : " + nbreCellules[i]);
-//     console.log("Indice de debut J : " + debutSol[i]);
-//     console.log("Indice de fin J : " + finSol[i]);
+    let joueur = false;
+    let monstre1Bool = false;
+    let monstre2Bool = false;
 
-// }
+    //Generation aleatoire du sol;
+    let nombreCellules = 0;
+    let ligne = [0]; //Tableau des lignes
+    let debutSol = [0]; //Tableau des indices de debut du sol (repere par l'index de la ligne)
+    let finSol = [0]; //Tableau des indices de fin de sol (repere par l'index de la ligne)
+    let nbreCellules = [0]; //Tableau des nombres de cellules sol par ligne (repere par l'index de la ligne)
 
-//Initialisation du Joueur/Warrior
-//warrior.style.backgroundImage = "url('./img/WarriorGirl.png')";
-let warrior = dungeon[18][14]; //Le joueur apparaitra toujours a cette position au depart
-//Parametres qui permettent de suivre le joueur
-let warriorI = 18; 
-let warriorJ = 14;
-warrior.style.backgroundColor = 'green';
+    for (let i=1; i<19; i++){
+        nombreCellules = Math.ceil(Math.random()*26); //Determination du nombre de cellules sol par ligne
 
-//Creation aleatoire des monstres
-let elementI, elementJ; //elementI et elementJ sont les indices de position des monstres et tresors (elements)
-function monstresTresors(){
-    let hasardLigne
+        let debutJ = Math.ceil((28-nombreCellules)/2);
+        let finJ = 29 - debutJ;
+
+        for (let j = debutJ; j<=finJ; j++){
+            dungeon[i][j].style.backgroundColor = "#968398";
+            dungeon[i][j].style.backgroundImage = "";
+        }
+        //Actualisation des tableaux des indices
+        ligne.push(i); 
+        debutSol.push(debutJ); 
+        finSol.push(finJ); 
+        nbreCellules.push(nombreCellules); 
+    }
+    ligne.push(19); 
+    debutSol.push(0); 
+    finSol.push(0); 
+    nbreCellules.push(0); 
+
+    //Initialisation du Joueur/Warrior
+    let warrior = dungeon[18][14]; //Le joueur apparaitra toujours a cette position au depart
+    //warrior.style.backgroundColor = '';
+    warrior.style.backgroundImage = "url(./img/ryu.gif)";
+    warrior.style.backgroundSize = "cover";
+    //Parametres qui permettent de suivre le joueur
+    let warriorI = 18; 
+    let warriorJ = 14;
+    //warrior.style.backgroundColor = 'green';
+
+    //Creation aleatoire des monstres
+    let element, elementI, elementJ; //elementI et elementJ sont les indices de position des monstres et tresors (elements)
+    function monstresTresors(){
+        let hasardLigne
+        do{
+            hasardLigne = Math.ceil(Math.random()*18);
+        } while (hasardLigne<1 || hasardLigne>18)
+        let hasardColonne = Math.ceil(Math.random()*nbreCellules[hasardLigne]);
+        element = dungeon[hasardLigne][debutSol[hasardLigne]+hasardColonne];
+        elementI = hasardLigne;
+        elementJ = debutSol[hasardLigne]+hasardColonne;
+        return element;
+    }
+    //Creation des monstres
+    //Monstre 1
+    let monstre1, monstre1I, monstre1J;
     do{
-        hasardLigne = Math.ceil(Math.random()*18);
-    } while (hasardLigne<1 || hasardLigne>18)
-    //console.log(hasardLigne);
-    let hasardColonne = Math.ceil(Math.random()*nbreCellules[hasardLigne]);
-    //console.log(hasardColonne);
-    //console.log(debutSol[hasardLigne]+hasardColonne);
-    let monstre = dungeon[hasardLigne][debutSol[hasardLigne]+hasardColonne];
-    //console.log(hasardLigne + " " + (debutSol[hasardLigne]+hasardColonne));
-    elementI = hasardLigne;
-    elementJ = debutSol[hasardLigne]+hasardColonne;
-    return monstre;
-}
-//Creation des monstres
-//Monstre 1
-let monstre1, monstre1I, monstre1J;
-do{
-    monstre1 = monstresTresors();
-    monstre1I = elementI; //Tracking de la position du monstre 1 en horizontal : i
-    monstre1J = elementJ; //Tracking de la position du monstre 1 a la verticale : j
-}while(monstre1I == 18 && monstre1J == 14); //Verification que la position du monstre 1 != position initiale du joueur
+        monstre1 = monstresTresors();
+        monstre1I = elementI; //Tracking de la position du monstre 1 en horizontal : i
+        monstre1J = elementJ; //Tracking de la position du monstre 1 a la verticale : j
+    }while(monstre1I == 18 && monstre1J == 14); //Verification que la position du monstre 1 != position initiale du joueur
 
-//Monstre 2
-let monstre2, monstre2I, monstre2J;
-do{
-    monstre2 = monstresTresors();
-    monstre2I = elementI;
-    monstre2J = elementJ;
-}while((monstre2I == 18 && monstre2J == 14) || (monstre2I == monstre1I && monstre2J == monstre1J)); //Verification que monstre 2 != monstre 1 ou du joueur
+    //Monstre 2
+    let monstre2, monstre2I, monstre2J;
+    do{
+        monstre2 = monstresTresors();
+        monstre2I = elementI;
+        monstre2J = elementJ;
+    }while((monstre2I == 18 && monstre2J == 14) || (monstre2I == monstre1I && monstre2J == monstre1J)); //Verification que monstre 2 != monstre 1 ou du joueur
 
+    monstre1.style.backgroundImage = "url(./img/monster.gif)";
+    monstre1.style.backgroundSize = "cover";
+    //monstre1.style.backgroundColor = 'purple';
+    monstre2.style.backgroundImage = "url(./img/monster.gif)";
+    monstre2.style.backgroundSize = "cover";
+    //monstre2.style.backgroundColor = 'purple';
 
-monstre1.style.backgroundColor = 'purple';
-monstre2.style.backgroundColor = 'purple';
+    //Creation des tresors
+    //Tresor 1
+    let tresor1, tresor1I, tresor1J;
+    do{
+        tresor1 = monstresTresors();
+        tresor1I = elementI;
+        tresor1J = elementJ;
+    }while((tresor1I == 18 && tresor1J == 14)||(tresor1I == monstre1I && tresor1J == monstre1J) || (tresor1I == monstre2I && tresor1J == monstre2J)) //Verification que la position du tresor 1 != position des monstres 1 et 2 ou du joueur
+    //Tresor 2
+    let tresor2, tresor2I, tresor2J;
+    do{
+        tresor2 = monstresTresors();
+        tresor2I = elementI;
+        tresor2J = elementJ;
+    }while((tresor2I == 18 && tresor2J == 14)||(tresor2I == monstre1I && tresor2J == monstre1J) || (tresor2I == monstre2I && tresor2J == monstre2J) || (tresor2I == tresor1I && tresor2J == tresor1J))//Verification que la position du tresor 2 != position des monstres 1 et 2 ou du tresor 1 ou du joueur
 
-//Creation des tresors
-//Tresor 1
-let tresor1, tresor1I, tresor1J;
-do{
-    tresor1 = monstresTresors();
-    tresor1I = elementI;
-    tresor1J = elementJ;
-}while((tresor1I == 18 && tresor1J == 14)||(tresor1I == monstre1I && tresor1J == monstre1J) || (tresor1I == monstre2I && tresor1J == monstre2J)) //Verification que la position du tresor 1 != position des monstres 1 et 2 ou du joueur
-//Tresor 2
-let tresor2, tresor2I, tresor2J;
-do{
-    tresor2 = monstresTresors();
-    tresor2I = elementI;
-    tresor2J = elementJ;
-}while((tresor2I == 18 && tresor2J == 14)||(tresor2I == monstre1I && tresor2J == monstre1J) || (tresor2I == monstre2I && tresor2J == monstre2J) || (tresor2I == tresor1I && tresor2J == tresor1J))//Verification que la position du tresor 2 != position des monstres 1 et 2 ou du tresor 1 ou du joueur
+    tresor1.style.backgroundImage = "url('./img/treasure.gif')";
+    tresor1.style.backgroundSize = "cover";
+    //tresor1.style.backgroundColor = 'gold';
+    tresor2.style.backgroundImage = "url('./img/treasure.gif')";
+    //tresor2.style.backgroundColor = 'gold';
+    tresor2.style.backgroundSize = "cover";
 
-tresor1.style.backgroundColor = 'gold';
-tresor2.style.backgroundColor = 'gold';
+    //Mouvement du Joueur/Warrior
+    //let compteur = 0; nombre de movements pour etablir des records
+    let scorespan = document.getElementById('score');
+    let nbreTresorsRestants = document.getElementById('nbreTresors');
+    scorespan = 0;
+    nbreTresorsRestants = 2;
+    score.textContent = scorespan.toString(); //Ca marche avec les ID
+    nbreTresors.textContent = nbreTresorsRestants.toString();
 
-//Mouvement du Joueur/Warrior
-//let compteur = 0; nombre de movements pour etablir des records
-let scorespan = document.getElementById('score');
-let nbreTresorsRestants = document.getElementById('nbreTresors');
-scorespan = 0;
-nbreTresorsRestants = 2;
-score.textContent = scorespan.toString(); //Ca marche avec les ID
-nbreTresors.textContent = nbreTresorsRestants.toString();
+    function up(){
+        //Verification de la cellule de destination
+        if(warriorJ>=debutSol[warriorI-1] && warriorJ<=finSol[warriorI-1] && (warriorI-1)>=0){
+            warrior = dungeon[warriorI-1][warriorJ];
+            warrior.style.backgroundImage = "url(./img/ryu.gif)";
+             warrior.style.backgroundSize = "cover";
+            //warrior.style.backgroundColor = 'green';
+            dungeon[warriorI][warriorJ].style.backgroundColor = '#968398';
+            dungeon[warriorI][warriorJ].style.backgroundImage = '';
+            warriorI -= 1;
+            MoveMonstre();
+            MoveMonstre2();
 
-function up(){
-    //Verification de la cellule de destination
-    if(warriorJ>=debutSol[warriorI-1] && warriorJ<=finSol[warriorI-1] && (warriorI-1)>=0){
-        warrior = dungeon[warriorI-1][warriorJ];
-        warrior.style.backgroundColor = 'green';
-        dungeon[warriorI][warriorJ].style.backgroundColor = 'cyan';
-        warriorI -= 1;
-        MoveMonstre();
-        MoveMonstre2();
+            //Collision avec un monstre
+            if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
+                geler();
+                prompt("Game Over");
+                return;
+            }
+            //Recuperation du premier tresor
+            else if(warriorI == tresor1I && warriorJ == tresor1J){
+                scorespan += 1;
+                score.textContent = scorespan.toString(); 
+                tresor1I = 0; // changement de la position du tresor trouve en (0,0) pour eviter un score errone quand le joueur passe par cette meme position encore une fois
+                tresor1J = 0;
+                nbreTresorsRestants -= 1;
+                nbreTresors.textContent = nbreTresorsRestants.toString();
+            }
+            //Recuperation du deuxieme tresor
+            else if(warriorI == tresor2I && warriorJ == tresor2J){
+                scorespan += 1;
+                score.textContent = scorespan.toString(); 
+                tresor2I = 0;
+                tresor2J = 0;
+                nbreTresorsRestants -= 1;
+                nbreTresors.textContent = nbreTresorsRestants.toString();
+            }
+            //Collision dans un mur
+            else{
+            return;
+            }
+        }   
+        win(); 
+    }
+    function down(){
+        if(warriorJ>=debutSol[warriorI+1] && warriorJ<=finSol[warriorI+1] && warriorI+1<=19){
+            warrior = dungeon[warriorI+1][warriorJ];
+            warrior.style.backgroundImage = "url(./img/ryu.gif)";
+            warrior.style.backgroundSize = "cover";
+            //warrior.style.backgroundColor = 'green';
+            dungeon[warriorI][warriorJ].style.backgroundColor = '#968398';
+            dungeon[warriorI][warriorJ].style.backgroundImage = '';
+            warriorI += 1;
+            MoveMonstre();
+            MoveMonstre2();
+            //Collision avec un monstre
+            if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
+                geler();
+                prompt("Game Over");
+                return;
+            }
+            //Recuperation du premier tresor
+            else if(warriorI == tresor1I && warriorJ == tresor1J){
+                scorespan += 1;
+                score.textContent = scorespan.toString(); 
+                tresor1I = 0;
+                tresor1J = 0;
+                nbreTresorsRestants -= 1;
+                nbreTresors.textContent = nbreTresorsRestants.toString();
+            }
+            //Recuperation du deuxieme tresor
+            else if(warriorI == tresor2I && warriorJ == tresor2J){
+                scorespan += 1;
+                score.textContent = scorespan.toString(); 
+                tresor2I = 0;
+                tresor2J = 0;
+                nbreTresorsRestants -= 1;
+                nbreTresors.textContent = nbreTresorsRestants.toString();
+            }
+            //Collision dans un mur
+            else{
+            return;
+            }
+        }    
+        win(); 
+    }
+    function right(){
+        if(warriorJ+1>=debutSol[warriorI] && warriorJ+1<=finSol[warriorI] && warriorJ+1<=29){
+            warrior = dungeon[warriorI][warriorJ+1];
+            warrior.style.backgroundImage = "url(./img/ryu.gif)";
+             warrior.style.backgroundSize = "cover";
+            //warrior.style.backgroundColor = 'green';
+            dungeon[warriorI][warriorJ].style.backgroundColor = '#968398';
+            dungeon[warriorI][warriorJ].style.backgroundImage = '';
+            warriorJ += 1;
+            MoveMonstre();
+            MoveMonstre2();
+            //Collision avec un monstre
+            if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
+                geler();
+                prompt("Game Over");
+                return;
+            }
+            //Recuperation du premier tresor
+            else if(warriorI == tresor1I && warriorJ == tresor1J){
+                scorespan += 1;
+                score.textContent = scorespan.toString(); 
+                tresor1I = 0;
+                tresor1J = 0;
+                nbreTresorsRestants -= 1;
+                nbreTresors.textContent = nbreTresorsRestants.toString();
+            }
+            //Recuperation du deuxieme tresor
+            else if(warriorI == tresor2I && warriorJ == tresor2J){
+                scorespan += 1;
+                score.textContent = scorespan.toString(); 
+                tresor2I = 0;
+                tresor2J = 0;
+                nbreTresorsRestants -= 1;
+                nbreTresors.textContent = nbreTresorsRestants.toString();
+            }
+            //Collision dans un mur
+            else{
+            return;
+            }
+        }   
+        win(); 
+    }
+    function left(){
+        if(warriorJ-1>=debutSol[warriorI] && warriorJ-1<=finSol[warriorI] && warriorJ-1>=0){
+            warrior = dungeon[warriorI][warriorJ-1];
+            warrior.style.backgroundImage = "url(./img/ryu.gif)";
+             warrior.style.backgroundSize = "cover";
+            //warrior.style.backgroundColor = 'green';
+            dungeon[warriorI][warriorJ].style.backgroundColor = '#968398';
+            dungeon[warriorI][warriorJ].style.backgroundImage = '';
+            warriorJ -= 1;
+            MoveMonstre();
+            MoveMonstre2();
+            //Collision avec un monstre
+            if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
+                geler();
+                prompt("Game Over");
+                return;
+            }
+            //Recuperation du premier tresor
+            else if(warriorI == tresor1I && warriorJ == tresor1J){
+                scorespan += 1;
+                score.textContent = scorespan.toString();
+                tresor1I = 0;
+                tresor1J = 0;
+                nbreTresorsRestants -= 1;
+                nbreTresors.textContent = nbreTresorsRestants.toString();
+            }
+            //Recuperation du deuxieme tresor
+            else if(warriorI == tresor2I && warriorJ == tresor2J){
+                scorespan += 1;
+                score.textContent = scorespan.toString(); 
+                tresor2I = 0;
+                tresor2J = 0;
+                nbreTresorsRestants -= 1;
+                nbreTresors.textContent = nbreTresorsRestants.toString();
+            }
+            //Collision dans un mur
+            else{
+            return;
+            }
+        }   
+        win(); 
+    }
+    let boutonHaut = document.getElementById('up');
+    let haut = up;
+    boutonHaut.addEventListener("click", haut);
 
-        //Collision avec un monstre
-        if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
-            geler;
-            prompt("Game Over");
+    let boutonBas = document.getElementById('down');
+    let bas = down;
+    boutonBas.addEventListener("click", bas);
+
+    let boutonDroit = document.getElementById('right');
+    let droit = right;
+    boutonDroit.addEventListener("click", droit);
+
+    let boutonGauche = document.getElementById('left');
+    let gauche = left;
+    boutonGauche.addEventListener("click", gauche);
+
+    //Generation des movements des monstres
+    function MoveMonstre(){
+        let moveRandom;
+        do{
+            moveRandom = Math.random();
+            if(moveRandom<.25){
+                //Vers le haut
+                if(monstre1J>=debutSol[monstre1I-1] && monstre1J<=finSol[monstre1I-1] && monstre1I-1>=0){//Verification que le monstre bouge sur le sol
+                    if(!(monstre1I-1==tresor1I && monstre1J==tresor1J) &&!(monstre1I-1==tresor2I && monstre1J==tresor2J)){//Verification que les monstres n'entrent pas en collision avec les tresors
+                        monstre1 = dungeon[monstre1I-1][monstre1J];
+                        monstre1.style.backgroundImage = "url(./img/monster.gif)";
+                        monstre1.style.backgroundSize = "cover";
+                        //monstre1.style.backgroundColor = 'purple';
+                        dungeon[monstre1I][monstre1J].style.backgroundColor = '#968398';
+                        dungeon[monstre1I][monstre1J].style.backgroundImage = '';
+                        monstre1I -= 1;
+                    }                    
+                }
+                else{
+                    return;
+                }
+            }
+            else if(moveRandom<.5){
+                //Vers le bas
+                if(monstre1J>=debutSol[monstre1I+1] && monstre1J<=finSol[monstre1I+1] && monstre1I+1<=20){
+                    if(!(monstre1I+1==tresor1I && monstre1J==tresor1J) &&!(monstre1I+1==tresor2I && monstre1J==tresor2J)){
+                        monstre1 = dungeon[monstre1I+1][monstre1J];
+                        monstre1.style.backgroundImage = "url(./img/monster.gif)";
+                        monstre1.style.backgroundSize = "cover";
+                        //monstre1.style.backgroundColor = 'purple';
+                        dungeon[monstre1I][monstre1J].style.backgroundColor = '#968398';
+                        dungeon[monstre1I][monstre1J].style.backgroundImage = '';
+                        monstre1I += 1;
+                    }
+                }
+                else{
+                    return;
+                } 
+            }
+            else if(moveRandom<.75){
+                //Vers la droite
+                if(monstre1J+1>=debutSol[monstre1I] && monstre1J+1<=finSol[monstre1I] && monstre1J+1<=30){
+                    if(!(monstre1I==tresor1I && monstre1J+1==tresor1J) &&!(monstre1I==tresor2I && monstre1J+1==tresor2J)){
+                        monstre1 = dungeon[monstre1I][monstre1J+1];
+                        monstre1.style.backgroundImage = "url(./img/monster.gif)";
+                        monstre1.style.backgroundSize = "cover";
+                        //monstre1.style.backgroundColor = 'purple';
+                        dungeon[monstre1I][monstre1J].style.backgroundColor = '#968398';
+                        dungeon[monstre1I][monstre1J].style.backgroundImage = '';
+                        monstre1J += 1;
+                    }
+                }
+                else{
+                    return;
+                } 
+            }
+            else{
+                //Vers la gauche
+                if(monstre1J-1>=debutSol[monstre1I] && monstre1J-1<=finSol[monstre1I] && monstre1J-1>=0){
+                    if(!(monstre1I==tresor1I && monstre1J-1==tresor1J) &&!(monstre1I==tresor2I && monstre1J-1==tresor2J)){
+                        monstre1 = dungeon[monstre1I][monstre1J-1];
+                        monstre1.style.backgroundImage = "url(./img/monster.gif)";
+                        monstre1.style.backgroundSize = "cover";
+                        //monstre1.style.backgroundColor = 'purple';
+                        dungeon[monstre1I][monstre1J].style.backgroundColor = '#968398';
+                        dungeon[monstre1I][monstre1J].style.backgroundImage = '';
+                        monstre1J -= 1;
+                    }
+                }
+                else{
+                    return;
+                } 
+            }
+        }while((monstre1I==tresor1I && monstre1J==tresor1J) || (monstre1I==tresor2I && monstre1J==tresor2J)) 
+    }
+
+    function MoveMonstre2(){
+        let moveRandom;
+        do{
+            moveRandom = Math.random();
+            if(moveRandom<.25){
+                //Vers le haut
+                if(monstre2J>=debutSol[monstre2I-1] && monstre2J<=finSol[monstre2I-1] && monstre2I-1>=0){
+                    if(!(monstre2I-1==tresor1I && monstre2J==tresor1J) &&!(monstre2I-1==tresor2I && monstre2J==tresor2J)){
+                        monstre2 = dungeon[monstre2I-1][monstre2J];
+                        monstre2.style.backgroundImage = "url(./img/monster.gif)";
+                        monstre2.style.backgroundSize = "cover";
+                        //monstre2.style.backgroundColor = 'purple';
+                        dungeon[monstre2I][monstre2J].style.backgroundColor = '#968398';
+                        dungeon[monstre2I][monstre2J].style.backgroundImage = '';
+                        monstre2I -= 1;
+                    }
+                }
+                else{
+                    return;
+                }
+            }
+            else if(moveRandom<.5){
+                //Vers le bas
+                if(monstre2J>=debutSol[monstre2I+1] && monstre2J<=finSol[monstre2I+1] && monstre2I+1<=20){
+                    if(!(monstre2I+1==tresor1I && monstre2J==tresor1J) &&!(monstre2I+1==tresor2I && monstre2J==tresor2J)){
+                        monstre2 = dungeon[monstre2I+1][monstre2J];
+                        monstre2.style.backgroundImage = "url(./img/monster.gif)";
+                        monstre2.style.backgroundSize = "cover";
+                        //monstre2.style.backgroundColor = 'purple';
+                        dungeon[monstre2I][monstre2J].style.backgroundColor = '#968398';
+                        dungeon[monstre2I][monstre2J].style.backgroundImage = '';
+                        monstre2I += 1;
+                    }
+                }
+                else{
+                    return;
+                } 
+            }
+            else if(moveRandom<.75){
+                //Vers la droite
+                if(monstre2J+1>=debutSol[monstre2I] && monstre2J+1<=finSol[monstre2I] && monstre2J+1<=30){
+                    if(!(monstre2I==tresor1I && monstre2J+1==tresor1J) &&!(monstre2I==tresor2I && monstre2J+1==tresor2J)){
+                        monstre2 = dungeon[monstre2I][monstre2J+1];
+                        monstre2.style.backgroundImage = "url(./img/monster.gif)";
+                        monstre2.style.backgroundSize = "cover";
+                        //monstre2.style.backgroundColor = 'purple';
+                        dungeon[monstre2I][monstre2J].style.backgroundColor = '#968398';
+                        dungeon[monstre2I][monstre2J].style.backgroundImage = '';
+                        monstre2J += 1;
+                    }
+                }
+                else{
+                    return;
+                } 
+            }
+            else{
+                //Vers la gauche
+                if(monstre2J-1>=debutSol[monstre2I] && monstre2J-1<=finSol[monstre2I] && monstre2J-1>=0){
+                    if(!(monstre2I==tresor1I && monstre2J-1==tresor1J) &&!(monstre2I==tresor2I && monstre2J-1==tresor2J)){//Verification que le monstre ne rentre pas dans un tresor
+                        monstre2 = dungeon[monstre2I][monstre2J-1];
+                        monstre2.style.backgroundImage = "url(./img/monster.gif)";
+                        monstre2.style.backgroundSize = "cover";
+                        //monstre2.style.backgroundColor = 'purple';
+                        dungeon[monstre2I][monstre2J].style.backgroundColor = '#968398';
+                        dungeon[monstre2I][monstre2J].style.backgroundImage = '';
+                        monstre2J -= 1;
+                    }
+                }
+                else{
+                    return;
+                } 
+            }
+        }while((monstre2I==tresor1I && monstre2J==tresor1J) || (monstre2I==tresor2I && monstre2J==tresor2J))
+    }
+
+    //GAME OVER
+    function geler(){
+        boutonHaut.removeEventListener("click", haut);
+        boutonBas.removeEventListener("click", bas);
+        boutonDroit.removeEventListener("click", droit);
+        boutonGauche.removeEventListener("click", gauche);
+    }
+
+    //WIN
+    function win(){
+        if (scorespan == 2){
+            geler(); //Ne fonctionne pas
+            let alerte = document.getElementById("alerte");
+            alerte.style.display = "block";
+            let btn = document.getElementById("recommencer");
+            btn.addEventListener("click", reinitialisationJeu);
+            let imgX = document.getElementById("X");
+            //let imgXdisp = displayNone();
+            imgX.addEventListener("click", displayNone);
+            // window.alert ("You Won!");
             return;
         }
-        //Recuperation du premier tresor
-        else if(warriorI == tresor1I && warriorJ == tresor1J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor1I = 0;
-            tresor1J = 0;
-        }
-        //Recuperation du deuxieme tresor
-        else if(warriorI == tresor2I && warriorJ == tresor2J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor2I = 0;
-            tresor2J = 0;
-        }
-        //Collision dans un mur
-        else{
-        return;
-        }
-    }   
-    win(); 
-}
-function down(){
-    if(warriorJ>=debutSol[warriorI+1] && warriorJ<=finSol[warriorI+1] && warriorI+1<=19){
-        warrior = dungeon[warriorI+1][warriorJ];
-        warrior.style.backgroundColor = 'green';
-        dungeon[warriorI][warriorJ].style.backgroundColor = 'cyan';
-        warriorI += 1;
-        MoveMonstre();
-        MoveMonstre2();
-        //Collision avec un monstre
-        if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
-            geler;
-            prompt("Game Over");
-            return;
-        }
-        //Recuperation du premier tresor
-        else if(warriorI == tresor1I && warriorJ == tresor1J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor1I = 0;
-            tresor1J = 0;
-        }
-        //Recuperation du deuxieme tresor
-        else if(warriorI == tresor2I && warriorJ == tresor2J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor2I = 0;
-            tresor2J = 0;
-        }
-        //Collision dans un mur
-        else{
-        return;
-        }
-    }    
-    win(); 
-}
-function right(){
-    if(warriorJ+1>=debutSol[warriorI] && warriorJ+1<=finSol[warriorI] && warriorJ+1<=29){
-        warrior = dungeon[warriorI][warriorJ+1];
-        warrior.style.backgroundColor = 'green';
-        dungeon[warriorI][warriorJ].style.backgroundColor = 'cyan';
-        warriorJ += 1;
-        MoveMonstre();
-        MoveMonstre2();
-        //Collision avec un monstre
-        if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
-            geler;
-            prompt("Game Over");
-            return;
-        }
-        //Recuperation du premier tresor
-        else if(warriorI == tresor1I && warriorJ == tresor1J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor1I = 0;
-            tresor1J = 0;
-        }
-        //Recuperation du deuxieme tresor
-        else if(warriorI == tresor2I && warriorJ == tresor2J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor2I = 0;
-            tresor2J = 0;
-        }
-        //Collision dans un mur
-        else{
-        return;
-        }
-    }   
-    win(); 
-}
-function left(){
-    if(warriorJ-1>=debutSol[warriorI] && warriorJ-1<=finSol[warriorI] && warriorJ-1>=0){
-        warrior = dungeon[warriorI][warriorJ-1];
-        warrior.style.backgroundColor = 'green';
-        dungeon[warriorI][warriorJ].style.backgroundColor = 'cyan';
-        warriorJ -= 1;
-        MoveMonstre();
-        MoveMonstre2();
-        //Collision avec un monstre
-        if((warriorI==monstre1I && warriorJ==monstre1J)||(warriorI==monstre2I && warriorJ==monstre2J)){
-            geler;
-            prompt("Game Over");
-            return;
-        }
-        //Recuperation du premier tresor
-        else if(warriorI == tresor1I && warriorJ == tresor1J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor1I = 0;
-            tresor1J = 0;
-        }
-        //Recuperation du deuxieme tresor
-        else if(warriorI == tresor2I && warriorJ == tresor2J){
-            scorespan += 1;
-            score.textContent = scorespan.toString(); 
-            tresor2I = 0;
-            tresor2J = 0;
-        }
-        //Collision dans un mur
-        else{
-        return;
-        }
-    }   
-    win(); 
-}
-let boutonHaut = document.getElementById('up');
-boutonHaut.addEventListener("click", function(){up();});
-
-let boutonBas = document.getElementById('down');
-boutonBas.addEventListener("click", function(){down();});
-
-let boutonDroit = document.getElementById('right');
-boutonDroit.addEventListener("click", function(){right();});
-
-let boutonGauche = document.getElementById('left');
-boutonGauche.addEventListener("click", function(){left();});
-
-function win(){
-    if (scorespan == 2){
-        geler;
-        window.alert ("You Won!");
+    }
+    function displayNone()
+    {
+        alerte.style.display = "none";
     }
 }
 
-
-
-
-//Generation des movements des monstres
-function MoveMonstre(){
-    let moveRandom;
-    moveRandom = Math.random();
-    if(moveRandom<.25){
-        //Vers le haut
-        if(monstre1J>=debutSol[monstre1I-1] && monstre1J<=finSol[monstre1I-1] && monstre1I-1>=0){
-            monstre1 = dungeon[monstre1I-1][monstre1J];
-            monstre1.style.backgroundColor = 'purple';
-            dungeon[monstre1I][monstre1J].style.backgroundColor = 'cyan';
-            monstre1I -= 1;
-        }
-        else{
-            return;
-        }
-    }
-    else if(moveRandom<.5){
-        //Vers le bas
-        if(monstre1J>=debutSol[monstre1I+1] && monstre1J<=finSol[monstre1I+1] && monstre1I+1<=20){
-            monstre1 = dungeon[monstre1I+1][monstre1J];
-            monstre1.style.backgroundColor = 'purple';
-            dungeon[monstre1I][monstre1J].style.backgroundColor = 'cyan';
-            monstre1I += 1;
-        }
-        else{
-            return;
-        } 
-    }
-    else if(moveRandom<.75){
-        //Vers la droite
-        if(monstre1J+1>=debutSol[monstre1I] && monstre1J+1<=finSol[monstre1I] && monstre1J+1<=30){
-            monstre1 = dungeon[monstre1I][monstre1J+1];
-            monstre1.style.backgroundColor = 'purple';
-            dungeon[monstre1I][monstre1J].style.backgroundColor = 'cyan';
-            monstre1J += 1;
-        }
-        else{
-            return;
-        } 
-    }
-    else{
-        //Vers la gauche
-        if(monstre1J-1>=debutSol[monstre1I] && monstre1J-1<=finSol[monstre1I] && monstre1J-1>=0){
-            monstre1 = dungeon[monstre1I][monstre1J-1];
-            monstre1.style.backgroundColor = 'purple';
-            dungeon[monstre1I][monstre1J].style.backgroundColor = 'cyan';
-            monstre1J -= 1;
-        }
-        else{
-            return;
-        } 
-    }
-}
-
-function MoveMonstre2(){
-    let moveRandom;
-    moveRandom = Math.random();
-    if(moveRandom<.25){
-        //Vers le haut
-        if(monstre2J>=debutSol[monstre2I-1] && monstre2J<=finSol[monstre2I-1] && monstre2I-1>=0){
-            monstre2 = dungeon[monstre2I-1][monstre2J];
-            monstre2.style.backgroundColor = 'purple';
-            dungeon[monstre2I][monstre2J].style.backgroundColor = 'cyan';
-            monstre2I -= 1;
-        }
-        else{
-            return;
-        }
-    }
-    else if(moveRandom<.5){
-        //Vers le bas
-        if(monstre2J>=debutSol[monstre2I+1] && monstre2J<=finSol[monstre2I+1] && monstre2I+1<=20){
-            monstre2 = dungeon[monstre2I+1][monstre2J];
-            monstre2.style.backgroundColor = 'purple';
-            dungeon[monstre2I][monstre2J].style.backgroundColor = 'cyan';
-            monstre2I += 1;
-        }
-        else{
-            return;
-        } 
-    }
-    else if(moveRandom<.75){
-        //Vers la droite
-        if(monstre2J+1>=debutSol[monstre2I] && monstre2J+1<=finSol[monstre2I] && monstre2J+1<=30){
-            monstre2 = dungeon[monstre2I][monstre2J+1];
-            monstre2.style.backgroundColor = 'purple';
-            dungeon[monstre2I][monstre2J].style.backgroundColor = 'cyan';
-            monstre2J += 1;
-        }
-        else{
-            return;
-        } 
-    }
-    else{
-        //Vers la gauche
-        if(monstre2J-1>=debutSol[monstre2I] && monstre2J-1<=finSol[monstre2I] && monstre2J-1>=0){
-            monstre2 = dungeon[monstre2I][monstre2J-1];
-            monstre2.style.backgroundColor = 'purple';
-            dungeon[monstre2I][monstre2J].style.backgroundColor = 'cyan';
-            monstre2J -= 1;
-        }
-        else{
-            return;
-        } 
-    }
-}
-
-function geler(){
-    boutonHaut.removeEventListener("click", function(){up();});
-    boutonBas.removeEventListener("click", function(){down();});
-    boutonDroit.removeEventListener("click", function(){right();});
-    boutonGauche.removeEventListener("click", function(){left();});
-}
+//Fonctionnalite : Jouer avec le clavier
+//Revoir l'alerte
+//Jouer avec l'affichage

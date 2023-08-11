@@ -1,8 +1,11 @@
 body{
-    background-image: url(../IMG/dungeon.jpg);
+    background-image: url(../IMG/dungeon2.jpg);
     background-size:cover;
-    font-family: 'MedievalSharp', cursive;
-    color:gold;
+    color:black;
+    font-size: 1.5em;
+    font-family: 'MedievalFont', sans-serif;
+    font-weight: 500;
+    font-style: italic;
 }
 header{
     text-align: center;
@@ -13,6 +16,8 @@ header{
 }
 footer{
     text-align: center;
+    font-size: .5em;
+    color:#b550ab;
     margin: auto;
     border: 1px solid rgb(56, 54, 54);
     padding: .2em;
@@ -32,7 +37,7 @@ td{
     width:25px;
     height: 25px;
     border: 1px solid pink;
-    box-shadow: .2px inset;
+
 }
 #Boutons{
     display: flex;
@@ -79,4 +84,31 @@ input{
     background-position: center;
     margin: auto;
     width: max-content;
+}
+input{
+  background-color: #222;
+  border: 2px solid #3d1d33;
+  color: gray;
+  padding: 10px 20px;
+  font-family: 'MedievalFont', sans-serif;
+  font-size: 16px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+#up.hover{
+    background-color: #d73b3b;
+}
+#alerte{
+    display: none;
+    background-color: #5B1B55;
+    position: fixed;
+    width: 700px;
+    height: 200px;
+    top: 20%;
+    left: 20%;
+}
+#X{
+    width: 25px;
+    height: 25px;
 }
