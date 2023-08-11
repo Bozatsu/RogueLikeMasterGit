@@ -1,7 +1,7 @@
 body{
     background-image: url(../IMG/dungeon2.jpg);
     background-size:cover;
-    color:black;
+    color:rgb(104, 118, 36);
     font-size: 1.5em;
     font-family: 'MedievalFont', sans-serif;
     font-weight: 500;
@@ -88,7 +88,7 @@ input{
 input{
   background-color: #222;
   border: 2px solid #3d1d33;
-  color: gray;
+  color: rgb(104, 118, 36);;
   padding: 10px 20px;
   font-family: 'MedievalFont', sans-serif;
   font-size: 16px;
@@ -107,8 +107,28 @@ input{
     height: 200px;
     top: 20%;
     left: 20%;
+    border : 7px groove rgb(77, 13, 42);
 }
 #X{
+    position: absolute;
+    left: 10px;
+    top: 10px;
     width: 25px;
     height: 25px;
+}
+strong{
+    display:block;
+    margin: 50px auto;
+}
+#recommencer{
+    display: flex;
+    margin: 10px auto;
+    width: fit-content;
+    border:5px #3d1d33 groove;
+}
+#stats{
+    background-color: #3d1d33;
+    border : 7px groove rgb(77, 13, 42);
+    padding: 10px;
+    color: rgb(104, 118, 36);
 }

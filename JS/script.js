@@ -503,7 +503,8 @@ function main(){
         if (scorespan == 2){
             geler(); //Ne fonctionne pas
             let alerte = document.getElementById("alerte");
-            alerte.style.display = "block";
+            alerte.style.display = "flex";
+            alerte.style.flexDirection = "column"
             let btn = document.getElementById("recommencer");
             btn.addEventListener("click", reinitialisationJeu);
             let imgX = document.getElementById("X");
