@@ -521,5 +521,4 @@ function main(){
 }
 
 //Fonctionnalite : Jouer avec le clavier
-//Revoir l'alerte
 //Jouer avec l'affichage
