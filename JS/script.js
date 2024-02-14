@@ -25,7 +25,7 @@ for (let i = 0; i < 20; i++){ //20 lignes
     for(let j = 0; j < 30; j++){ //30 colonnes
         dungeon[i][j] = document.getElementById(dungeon[i][j]);
         dungeon[i][j].style.backgroundColor = 'red'; //Mur
-        dungeon[i][j].style.backgroundImage = "url('./img/brick.jpg')";
+        dungeon[i][j].style.backgroundImage = "url('../img/brick.jpg')";
         dungeon[i][j].style.backgroundSize = "cover";
     }
 }
