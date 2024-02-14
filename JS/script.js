@@ -25,7 +25,7 @@ for (let i = 0; i < 20; i++){ //20 lignes
     for(let j = 0; j < 30; j++){ //30 colonnes
         dungeon[i][j] = document.getElementById(dungeon[i][j]);
         dungeon[i][j].style.backgroundColor = 'red'; //Mur
-        dungeon[i][j].style.backgroundImage = "url('../img/brick.jpg')";
+        dungeon[i][j].style.backgroundImage = "url('./img/brick.jpg')";
         dungeon[i][j].style.backgroundSize = "cover";
     }
 }
@@ -77,7 +77,7 @@ function main(){
     //Initialisation du Joueur/Warrior
     let warrior = dungeon[18][14]; //Le joueur apparaitra toujours a cette position au depart
     //warrior.style.backgroundColor = '';
-    warrior.style.backgroundImage = "url(../img/ryu.gif)";
+    warrior.style.backgroundImage = "url('./img/ryu.gif')";
     warrior.style.backgroundSize = "cover";
     //Parametres qui permettent de suivre le joueur
     let warriorI = 18; 
@@ -114,10 +114,10 @@ function main(){
         monstre2J = elementJ;
     }while((monstre2I == 18 && monstre2J == 14) || (monstre2I == monstre1I && monstre2J == monstre1J)); //Verification que monstre 2 != monstre 1 ou du joueur
 
-    monstre1.style.backgroundImage = "url(../img/monster.gif)";
+    monstre1.style.backgroundImage = "url('./img/monster.gif')";
     monstre1.style.backgroundSize = "cover";
     //monstre1.style.backgroundColor = 'purple';
-    monstre2.style.backgroundImage = "url(../img/monster.gif)";
+    monstre2.style.backgroundImage = "url('./img/monster.gif')";
     monstre2.style.backgroundSize = "cover";
     //monstre2.style.backgroundColor = 'purple';
 
@@ -137,10 +137,10 @@ function main(){
         tresor2J = elementJ;
     }while((tresor2I == 18 && tresor2J == 14)||(tresor2I == monstre1I && tresor2J == monstre1J) || (tresor2I == monstre2I && tresor2J == monstre2J) || (tresor2I == tresor1I && tresor2J == tresor1J))//Verification que la position du tresor 2 != position des monstres 1 et 2 ou du tresor 1 ou du joueur
 
-    tresor1.style.backgroundImage = "url('../img/treasure.gif')";
+    tresor1.style.backgroundImage = "url('./img/treasure.gif')";
     tresor1.style.backgroundSize = "cover";
     //tresor1.style.backgroundColor = 'gold';
-    tresor2.style.backgroundImage = "url('../img/treasure.gif')";
+    tresor2.style.backgroundImage = "url('./img/treasure.gif')";
     //tresor2.style.backgroundColor = 'gold';
     tresor2.style.backgroundSize = "cover";
 
@@ -157,7 +157,7 @@ function main(){
         //Verification de la cellule de destination
         if(warriorJ>=debutSol[warriorI-1] && warriorJ<=finSol[warriorI-1] && (warriorI-1)>=0){
             warrior = dungeon[warriorI-1][warriorJ];
-            warrior.style.backgroundImage = "url(../img/ryu.gif)";
+            warrior.style.backgroundImage = "url('./img/ryu.gif')";
              warrior.style.backgroundSize = "cover";
             //warrior.style.backgroundColor = 'green';
             dungeon[warriorI][warriorJ].style.backgroundColor = '#968398';
@@ -200,7 +200,7 @@ function main(){
     function down(){
         if(warriorJ>=debutSol[warriorI+1] && warriorJ<=finSol[warriorI+1] && warriorI+1<=19){
             warrior = dungeon[warriorI+1][warriorJ];
-            warrior.style.backgroundImage = "url(../img/ryu.gif)";
+            warrior.style.backgroundImage = "url('./img/ryu.gif')";
             warrior.style.backgroundSize = "cover";
             //warrior.style.backgroundColor = 'green';
             dungeon[warriorI][warriorJ].style.backgroundColor = '#968398';
@@ -242,7 +242,7 @@ function main(){
     function right(){
         if(warriorJ+1>=debutSol[warriorI] && warriorJ+1<=finSol[warriorI] && warriorJ+1<=29){
             warrior = dungeon[warriorI][warriorJ+1];
-            warrior.style.backgroundImage = "url(../img/ryu.gif)";
+            warrior.style.backgroundImage = "url('./img/ryu.gif')";
              warrior.style.backgroundSize = "cover";
             //warrior.style.backgroundColor = 'green';
             dungeon[warriorI][warriorJ].style.backgroundColor = '#968398';
@@ -284,7 +284,7 @@ function main(){
     function left(){
         if(warriorJ-1>=debutSol[warriorI] && warriorJ-1<=finSol[warriorI] && warriorJ-1>=0){
             warrior = dungeon[warriorI][warriorJ-1];
-            warrior.style.backgroundImage = "url(../img/ryu.gif)";
+            warrior.style.backgroundImage = "url('./img/ryu.gif')";
              warrior.style.backgroundSize = "cover";
             //warrior.style.backgroundColor = 'green';
             dungeon[warriorI][warriorJ].style.backgroundColor = '#968398';
@@ -349,7 +349,7 @@ function main(){
                 if(monstre1J>=debutSol[monstre1I-1] && monstre1J<=finSol[monstre1I-1] && monstre1I-1>=0){//Verification que le monstre bouge sur le sol
                     if(!(monstre1I-1==tresor1I && monstre1J==tresor1J) &&!(monstre1I-1==tresor2I && monstre1J==tresor2J)){//Verification que les monstres n'entrent pas en collision avec les tresors
                         monstre1 = dungeon[monstre1I-1][monstre1J];
-                        monstre1.style.backgroundImage = "url(../img/monster.gif)";
+                        monstre1.style.backgroundImage = "url('./img/monster.gif')";
                         monstre1.style.backgroundSize = "cover";
                         //monstre1.style.backgroundColor = 'purple';
                         dungeon[monstre1I][monstre1J].style.backgroundColor = '#968398';
@@ -366,7 +366,7 @@ function main(){
                 if(monstre1J>=debutSol[monstre1I+1] && monstre1J<=finSol[monstre1I+1] && monstre1I+1<=20){
                     if(!(monstre1I+1==tresor1I && monstre1J==tresor1J) &&!(monstre1I+1==tresor2I && monstre1J==tresor2J)){
                         monstre1 = dungeon[monstre1I+1][monstre1J];
-                        monstre1.style.backgroundImage = "url(../img/monster.gif)";
+                        monstre1.style.backgroundImage = "url('./img/monster.gif')";
                         monstre1.style.backgroundSize = "cover";
                         //monstre1.style.backgroundColor = 'purple';
                         dungeon[monstre1I][monstre1J].style.backgroundColor = '#968398';
@@ -383,7 +383,7 @@ function main(){
                 if(monstre1J+1>=debutSol[monstre1I] && monstre1J+1<=finSol[monstre1I] && monstre1J+1<=30){
                     if(!(monstre1I==tresor1I && monstre1J+1==tresor1J) &&!(monstre1I==tresor2I && monstre1J+1==tresor2J)){
                         monstre1 = dungeon[monstre1I][monstre1J+1];
-                        monstre1.style.backgroundImage = "url(../img/monster.gif)";
+                        monstre1.style.backgroundImage = "url('./img/monster.gif')";
                         monstre1.style.backgroundSize = "cover";
                         //monstre1.style.backgroundColor = 'purple';
                         dungeon[monstre1I][monstre1J].style.backgroundColor = '#968398';
@@ -400,7 +400,7 @@ function main(){
                 if(monstre1J-1>=debutSol[monstre1I] && monstre1J-1<=finSol[monstre1I] && monstre1J-1>=0){
                     if(!(monstre1I==tresor1I && monstre1J-1==tresor1J) &&!(monstre1I==tresor2I && monstre1J-1==tresor2J)){
                         monstre1 = dungeon[monstre1I][monstre1J-1];
-                        monstre1.style.backgroundImage = "url(../img/monster.gif)";
+                        monstre1.style.backgroundImage = "url('./img/monster.gif')";
                         monstre1.style.backgroundSize = "cover";
                         //monstre1.style.backgroundColor = 'purple';
                         dungeon[monstre1I][monstre1J].style.backgroundColor = '#968398';
@@ -424,7 +424,7 @@ function main(){
                 if(monstre2J>=debutSol[monstre2I-1] && monstre2J<=finSol[monstre2I-1] && monstre2I-1>=0){
                     if(!(monstre2I-1==tresor1I && monstre2J==tresor1J) &&!(monstre2I-1==tresor2I && monstre2J==tresor2J)){
                         monstre2 = dungeon[monstre2I-1][monstre2J];
-                        monstre2.style.backgroundImage = "url(../img/monster.gif)";
+                        monstre2.style.backgroundImage = "url('./img/monster.gif')";
                         monstre2.style.backgroundSize = "cover";
                         //monstre2.style.backgroundColor = 'purple';
                         dungeon[monstre2I][monstre2J].style.backgroundColor = '#968398';
@@ -441,7 +441,7 @@ function main(){
                 if(monstre2J>=debutSol[monstre2I+1] && monstre2J<=finSol[monstre2I+1] && monstre2I+1<=20){
                     if(!(monstre2I+1==tresor1I && monstre2J==tresor1J) &&!(monstre2I+1==tresor2I && monstre2J==tresor2J)){
                         monstre2 = dungeon[monstre2I+1][monstre2J];
-                        monstre2.style.backgroundImage = "url(../img/monster.gif)";
+                        monstre2.style.backgroundImage = "url('./img/monster.gif')";
                         monstre2.style.backgroundSize = "cover";
                         //monstre2.style.backgroundColor = 'purple';
                         dungeon[monstre2I][monstre2J].style.backgroundColor = '#968398';
@@ -458,7 +458,7 @@ function main(){
                 if(monstre2J+1>=debutSol[monstre2I] && monstre2J+1<=finSol[monstre2I] && monstre2J+1<=30){
                     if(!(monstre2I==tresor1I && monstre2J+1==tresor1J) &&!(monstre2I==tresor2I && monstre2J+1==tresor2J)){
                         monstre2 = dungeon[monstre2I][monstre2J+1];
-                        monstre2.style.backgroundImage = "url(../img/monster.gif)";
+                        monstre2.style.backgroundImage = "url('./img/monster.gif')";
                         monstre2.style.backgroundSize = "cover";
                         //monstre2.style.backgroundColor = 'purple';
                         dungeon[monstre2I][monstre2J].style.backgroundColor = '#968398';
@@ -475,7 +475,7 @@ function main(){
                 if(monstre2J-1>=debutSol[monstre2I] && monstre2J-1<=finSol[monstre2I] && monstre2J-1>=0){
                     if(!(monstre2I==tresor1I && monstre2J-1==tresor1J) &&!(monstre2I==tresor2I && monstre2J-1==tresor2J)){//Verification que le monstre ne rentre pas dans un tresor
                         monstre2 = dungeon[monstre2I][monstre2J-1];
-                        monstre2.style.backgroundImage = "url(../img/monster.gif)";
+                        monstre2.style.backgroundImage = "url('./img/monster.gif')";
                         monstre2.style.backgroundSize = "cover";
                         //monstre2.style.backgroundColor = 'purple';
                         dungeon[monstre2I][monstre2J].style.backgroundColor = '#968398';
